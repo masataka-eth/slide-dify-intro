@@ -39,12 +39,28 @@
         right: 20px;
         transform: none;
         display: flex;
+        align-items: center;
         gap: 8px;
         z-index: 10;
         padding: 10px;
         border-radius: 20px;
         background: rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(5px);
+      }
+      
+      .nav-button {
+        font-size: 12px;
+        padding: 2px 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-button:hover {
+        background: rgba(255, 255, 255, 0.2);
       }
 
       .progress-dot {
@@ -67,18 +83,26 @@
     </div>
 
     <div class="progress-container" id="progress-container">
+      <button class="nav-button" id="prev-btn">prev</button>
       <!-- プログレスドットはJavaScriptで生成 -->
+      <button class="nav-button" id="next-btn">next</button>
     </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const slideFrame = document.getElementById("slide-frame");
         const progressContainer = document.getElementById("progress-container");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
 
         let currentSlide = 1;
         const totalSlides = 9;
 
         // プログレスドットを生成
+        const dotsContainer = document.createElement("div");
+        dotsContainer.style.display = "flex";
+        dotsContainer.style.gap = "8px";
+        
         for (let i = 1; i <= totalSlides; i++) {
           const dot = document.createElement("div");
           dot.classList.add("progress-dot");
@@ -90,8 +114,11 @@
             updateSlide();
           });
 
-          progressContainer.appendChild(dot);
+          dotsContainer.appendChild(dot);
         }
+        
+        // prevボタンとnextボタンの間にドットを挿入
+        progressContainer.insertBefore(dotsContainer, nextBtn);
 
         // 初期表示でアクティブなドットを設定
         updateProgressDots();
@@ -138,6 +165,10 @@
             prevSlide();
           }
         });
+        
+        // ボタンイベントリスナー
+        prevBtn.addEventListener("click", prevSlide);
+        nextBtn.addEventListener("click", nextSlide);
       });
     </script>
   </body>
