@@ -54,7 +54,8 @@
             min-height: 550px;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
+            /* overflow: hidden; */
+            margin-top: 10px;
         }
         .stage-card:hover {
             transform: translateY(-5px);
@@ -71,12 +72,12 @@
         }
         .stage-badge {
             position: absolute;
-            top: 10px;
+            top: -15px;
             left: 20px;
             padding: 5px 15px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             z-index: 2;
         }
@@ -569,7 +570,7 @@
                         <div class="stage-card with-dify-card">
                             <div class="glow with-dify-glow"></div>
                             <div class="stage-badge with-dify-badge">With Dify</div>
-                            <h3 class="text-2xl font-bold mb-3 mt-3 flex items-center">
+                            <h3 class="text-2xl font-bold mb-3 flex items-center">
                                 <i class="fas fa-magic text-blue-400 mr-2"></i>Difyでこう変わる！
                             </h3>
                             
@@ -638,7 +639,7 @@
                         <div class="stage-card after-card">
                             <div class="glow after-glow"></div>
                             <div class="stage-badge after-badge">After</div>
-                            <h3 class="text-2xl font-bold mb-3 mt-3 flex items-center">
+                            <h3 class="text-2xl font-bold mb-3 flex items-center">
                                 <i class="fas fa-chart-line text-green-400 mr-2"></i>期待される効果
                             </h3>
                             
