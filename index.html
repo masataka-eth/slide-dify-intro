@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Difyプレゼンテーション</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0f2027;
+        color: white;
+        font-family: "Segoe UI", "Noto Sans JP", sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .slide-container {
+        flex: 1;
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .progress-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        transform: none;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+        padding: 10px;
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(5px);
+      }
+
+      .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .progress-dot.active {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container">
+      <iframe id="slide-frame" src="pages/1.html" allowfullscreen></iframe>
+    </div>
+
+    <div class="progress-container" id="progress-container">
+      <!-- プログレスドットはJavaScriptで生成 -->
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const slideFrame = document.getElementById("slide-frame");
+        const progressContainer = document.getElementById("progress-container");
+
+        let currentSlide = 1;
+        const totalSlides = 9;
+
+        // プログレスドットを生成
+        for (let i = 1; i <= totalSlides; i++) {
+          const dot = document.createElement("div");
+          dot.classList.add("progress-dot");
+          dot.dataset.slide = i;
+
+          // クリックでそのスライドに移動できるようにする
+          dot.addEventListener("click", function () {
+            currentSlide = parseInt(this.dataset.slide);
+            updateSlide();
+          });
+
+          progressContainer.appendChild(dot);
+        }
+
+        // 初期表示でアクティブなドットを設定
+        updateProgressDots();
+
+        // スライドを更新する関数
+        function updateSlide() {
+          slideFrame.src = `pages/${currentSlide}.html`;
+          updateProgressDots();
+        }
+
+        // プログレスドットの状態を更新
+        function updateProgressDots() {
+          const dots = document.querySelectorAll(".progress-dot");
+          dots.forEach((dot, index) => {
+            if (index + 1 <= currentSlide) {
+              dot.classList.add("active");
+            } else {
+              dot.classList.remove("active");
+            }
+          });
+        }
+
+        // 次のスライドに進む
+        function nextSlide() {
+          if (currentSlide < totalSlides) {
+            currentSlide++;
+            updateSlide();
+          }
+        }
+
+        // 前のスライドに戻る
+        function prevSlide() {
+          if (currentSlide > 1) {
+            currentSlide--;
+            updateSlide();
+          }
+        }
+
+        // キーボードイベントリスナー
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "ArrowRight") {
+            nextSlide();
+          } else if (event.key === "ArrowLeft") {
+            prevSlide();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

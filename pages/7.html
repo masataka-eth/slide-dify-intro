@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>なぜDify？ - DX推進を加速する4つのメリット</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+        font-family: "Noto Sans JP", "Segoe UI", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .slide {
+        width: 1280px;
+        min-height: 720px;
+        position: relative;
+        overflow: hidden;
+        transform: scale(0.9);
+        transform-origin: center center;
+      }
+      .gradient-overlay {
+        background: linear-gradient(
+          135deg,
+          rgba(76, 0, 255, 0.05),
+          rgba(0, 153, 255, 0.05)
+        );
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      .title {
+        font-weight: 800;
+        line-height: 1.1;
+        background: linear-gradient(90deg, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+      }
+
+      .benefit-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 20px;
+        position: relative;
+        height: 500px;
+      }
+
+      .center-circle {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 30;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .dify-logo {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        font-weight: bold;
+        background: linear-gradient(135deg, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .connecting-line {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 2;
+      }
+
+      .horizontal-line {
+        height: 2px;
+        top: 50%;
+        left: 0;
+        right: 0;
+      }
+
+      .vertical-line {
+        width: 2px;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+      }
+
+      .benefit-card {
+        border-radius: 24px;
+        padding: 25px;
+        backdrop-filter: blur(5px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.3);
+      }
+
+      .benefit-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        z-index: 20;
+      }
+
+      .benefit-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        margin-bottom: 20px;
+        position: relative;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .benefit-icon::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: inherit;
+        filter: blur(8px);
+        opacity: 0.7;
+        z-index: -1;
+      }
+
+      .icon-rays {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        animation: rotate 10s linear infinite;
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .ray {
+        position: absolute;
+        width: 2px;
+        height: 20px;
+        background: inherit;
+        left: 50%;
+        top: 0;
+        transform-origin: bottom center;
+      }
+
+      .benefit-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .benefit-description {
+        margin-bottom: 15px;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .key-point {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 8px 12px;
+        margin: 5px;
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .key-point:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .speed-card {
+        background: linear-gradient(
+          135deg,
+          rgba(37, 99, 235, 0.1),
+          rgba(37, 99, 235, 0.2)
+        );
+        border: 1px solid rgba(37, 99, 235, 0.3);
+      }
+
+      .customize-card {
+        background: linear-gradient(
+          135deg,
+          rgba(124, 58, 237, 0.1),
+          rgba(124, 58, 237, 0.2)
+        );
+        border: 1px solid rgba(124, 58, 237, 0.3);
+      }
+
+      .cost-card {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.1),
+          rgba(16, 185, 129, 0.2)
+        );
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .security-card {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.1),
+          rgba(245, 158, 11, 0.2)
+        );
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
+      .speed-icon {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+      }
+
+      .customize-icon {
+        background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+        color: white;
+      }
+
+      .cost-icon {
+        background: linear-gradient(135deg, #059669, #10b981);
+        color: white;
+      }
+
+      .security-icon {
+        background: linear-gradient(135deg, #d97706, #f59e0b);
+        color: white;
+      }
+
+      .speed-point {
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .customize-point {
+        color: #8b5cf6;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+      }
+
+      .cost-point {
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .security-point {
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
+      .pulsing-dots {
+        position: absolute;
+        border-radius: 50%;
+        background: inherit;
+        opacity: 0;
+        transform: scale(0.5);
+        animation: pulse-dot 3s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+      }
+
+      @keyframes pulse-dot {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+
+      .decorative-circle {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 0;
+        opacity: 0.15;
+        filter: blur(60px);
+      }
+
+      .benefit-number {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(255, 255, 255, 0.15);
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .customize-card .benefit-number,
+      .security-card .benefit-number {
+        left: auto;
+        right: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide flex flex-col p-10 relative">
+      <!-- Decorative background circles -->
+      <div
+        class="decorative-circle"
+        style="
+          width: 400px;
+          height: 400px;
+          top: -200px;
+          left: -100px;
+          background: #3b82f6;
+        "
+      ></div>
+      <div
+        class="decorative-circle"
+        style="
+          width: 300px;
+          height: 300px;
+          bottom: -100px;
+          right: -150px;
+          background: #8b5cf6;
+        "
+      ></div>
+      <div
+        class="decorative-circle"
+        style="
+          width: 250px;
+          height: 250px;
+          bottom: -50px;
+          left: 40%;
+          background: #10b981;
+        "
+      ></div>
+      <div
+        class="decorative-circle"
+        style="
+          width: 200px;
+          height: 200px;
+          top: 20%;
+          right: 10%;
+          background: #f59e0b;
+        "
+      ></div>
+
+      <div class="gradient-overlay"></div>
+
+      <!-- Main content with z-index to appear above gradient -->
+      <div class="z-10 flex flex-col h-full">
+        <!-- Title section -->
+        <div class="mb-8 text-center">
+          <h1 class="title text-5xl mb-2">なぜDify？</h1>
+          <p class="text-xl opacity-90">DX推進を加速する4つのメリット</p>
+        </div>
+
+        <!-- Benefits grid -->
+        <div class="benefit-grid flex-1">
+          <!-- Connecting lines -->
+          <div class="connecting-line horizontal-line"></div>
+          <div class="connecting-line vertical-line"></div>
+
+          <!-- Center Dify logo -->
+          <div class="center-circle">
+            <div class="dify-logo">Dify</div>
+          </div>
+
+          <!-- Benefit 1: Speed & Ease -->
+          <div class="benefit-card speed-card">
+            <div class="benefit-number">1</div>
+            <div class="benefit-icon speed-icon">
+              <i class="fas fa-rocket"></i>
+              <div class="icon-rays">
+                <div class="ray" style="transform: rotate(0deg)"></div>
+                <div class="ray" style="transform: rotate(45deg)"></div>
+                <div class="ray" style="transform: rotate(90deg)"></div>
+                <div class="ray" style="transform: rotate(135deg)"></div>
+                <div class="ray" style="transform: rotate(180deg)"></div>
+                <div class="ray" style="transform: rotate(225deg)"></div>
+                <div class="ray" style="transform: rotate(270deg)"></div>
+                <div class="ray" style="transform: rotate(315deg)"></div>
+              </div>
+              <div class="pulsing-dots" style="width: 100%; height: 100%"></div>
+            </div>
+
+            <h3 class="benefit-title text-white">
+              圧倒的な「開発スピード」と「手軽さ」
+            </h3>
+
+            <p class="benefit-description">
+              専門知識不要で、すぐにAIアプリケーションを構築。従来の開発期間を大幅に短縮。
+            </p>
+
+            <div class="flex flex-wrap justify-center mt-auto">
+              <div class="key-point speed-point">
+                <i class="fas fa-bolt mr-1"></i> アイデアを即実現
+              </div>
+              <div class="key-point speed-point">
+                <i class="fas fa-vial mr-1"></i> 迅速なPoC
+              </div>
+              <div class="key-point speed-point">
+                <i class="fas fa-calendar-alt mr-1"></i> 開発期間短縮
+              </div>
+            </div>
+          </div>
+
+          <!-- Benefit 2: Customization & Scalability -->
+          <div class="benefit-card customize-card">
+            <div class="benefit-number">2</div>
+            <div class="benefit-icon customize-icon">
+              <i class="fas fa-puzzle-piece"></i>
+              <div class="icon-rays">
+                <div class="ray" style="transform: rotate(0deg)"></div>
+                <div class="ray" style="transform: rotate(45deg)"></div>
+                <div class="ray" style="transform: rotate(90deg)"></div>
+                <div class="ray" style="transform: rotate(135deg)"></div>
+                <div class="ray" style="transform: rotate(180deg)"></div>
+                <div class="ray" style="transform: rotate(225deg)"></div>
+                <div class="ray" style="transform: rotate(270deg)"></div>
+                <div class="ray" style="transform: rotate(315deg)"></div>
+              </div>
+              <div class="pulsing-dots" style="width: 100%; height: 100%"></div>
+            </div>
+
+            <h3 class="benefit-title text-white">
+              高い「カスタマイズ性」と「拡張性」
+            </h3>
+
+            <p class="benefit-description">
+              様々なAIモデルを選択・組合せ可能。自社データと連携して業務特化型AIへと進化。
+            </p>
+
+            <div class="flex flex-wrap justify-center mt-auto">
+              <div class="key-point customize-point">
+                <i class="fas fa-sitemap mr-1"></i> 複数LLM活用
+              </div>
+              <div class="key-point customize-point">
+                <i class="fas fa-database mr-1"></i> 自社データ連携
+              </div>
+              <div class="key-point customize-point">
+                <i class="fas fa-plug mr-1"></i> APIシステム統合
+              </div>
+            </div>
+          </div>
+
+          <!-- Benefit 3: Cost Performance -->
+          <div class="benefit-card cost-card">
+            <div class="benefit-number">3</div>
+            <div class="benefit-icon cost-icon">
+              <i class="fas fa-coins"></i>
+              <div class="icon-rays">
+                <div class="ray" style="transform: rotate(0deg)"></div>
+                <div class="ray" style="transform: rotate(45deg)"></div>
+                <div class="ray" style="transform: rotate(90deg)"></div>
+                <div class="ray" style="transform: rotate(135deg)"></div>
+                <div class="ray" style="transform: rotate(180deg)"></div>
+                <div class="ray" style="transform: rotate(225deg)"></div>
+                <div class="ray" style="transform: rotate(270deg)"></div>
+                <div class="ray" style="transform: rotate(315deg)"></div>
+              </div>
+              <div class="pulsing-dots" style="width: 100%; height: 100%"></div>
+            </div>
+
+            <h3 class="benefit-title text-white">
+              優れた「コストパフォーマンス」
+            </h3>
+
+            <p class="benefit-description">
+              専門人材の採用・委託コストを抑制。スモールスタートから段階的に投資を拡大可能。
+            </p>
+
+            <div class="flex flex-wrap justify-center mt-auto">
+              <div class="key-point cost-point">
+                <i class="fas fa-money-bill-wave mr-1"></i> 人件費削減
+              </div>
+              <div class="key-point cost-point">
+                <i class="fas fa-seedling mr-1"></i> 低コストで開始
+              </div>
+              <div class="key-point cost-point">
+                <i class="fas fa-chart-line mr-1"></i> 短期ROI実現
+              </div>
+            </div>
+          </div>
+
+          <!-- Benefit 4: Operability & Security -->
+          <div class="benefit-card security-card">
+            <div class="benefit-number">4</div>
+            <div class="benefit-icon security-icon">
+              <i class="fas fa-shield-alt"></i>
+              <div class="icon-rays">
+                <div class="ray" style="transform: rotate(0deg)"></div>
+                <div class="ray" style="transform: rotate(45deg)"></div>
+                <div class="ray" style="transform: rotate(90deg)"></div>
+                <div class="ray" style="transform: rotate(135deg)"></div>
+                <div class="ray" style="transform: rotate(180deg)"></div>
+                <div class="ray" style="transform: rotate(225deg)"></div>
+                <div class="ray" style="transform: rotate(270deg)"></div>
+                <div class="ray" style="transform: rotate(315deg)"></div>
+              </div>
+              <div class="pulsing-dots" style="width: 100%; height: 100%"></div>
+            </div>
+
+            <h3 class="benefit-title text-white">
+              安心の「運用性とセキュリティ」
+            </h3>
+
+            <p class="benefit-description">
+              直感的な管理画面で簡単運用。エンタープライズレベルのセキュリティにも対応。
+            </p>
+
+            <div class="flex flex-wrap justify-center mt-auto">
+              <div class="key-point security-point">
+                <i class="fas fa-desktop mr-1"></i> 簡単管理画面
+              </div>
+              <div class="key-point security-point">
+                <i class="fas fa-lock mr-1"></i> 高度セキュリティ
+              </div>
+              <div class="key-point security-point">
+                <i class="fas fa-server mr-1"></i> オンプレ対応
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活用事例③ - マーケティングコンテンツ生成支援</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            /* transform: scale(0.83);
+            transform-origin: center top;
+            margin-top: -20px; */
+        }
+        .gradient-overlay {
+            background: linear-gradient(135deg, rgba(76, 0, 255, 0.05), rgba(0, 153, 255, 0.05));
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .title {
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+        }
+        .stage-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px 20px 20px;
+            backdrop-filter: blur(5px);
+            min-height: 550px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .before-card {
+            border-left: 4px solid #f87171;
+        }
+        .with-dify-card {
+            border-left: 4px solid #60a5fa;
+        }
+        .after-card {
+            border-left: 4px solid #34d399;
+        }
+        .stage-badge {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+        .before-badge {
+            background: #f87171;
+            color: white;
+        }
+        .with-dify-badge {
+            background: #60a5fa;
+            color: white;
+        }
+        .after-badge {
+            background: #34d399;
+            color: white;
+        }
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .stage-card:hover .glow {
+            opacity: 0.5;
+        }
+        .before-glow {
+            box-shadow: 0 0 80px 20px rgba(248, 113, 113, 0.3) inset;
+        }
+        .with-dify-glow {
+            box-shadow: 0 0 80px 20px rgba(96, 165, 250, 0.3) inset;
+        }
+        .after-glow {
+            box-shadow: 0 0 80px 20px rgba(52, 211, 153, 0.3) inset;
+        }
+        .image-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+            max-height: 160px;
+        }
+        .point-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-left: 10px;
+            position: relative;
+            z-index: 2;
+            font-size: 20px;
+        }
+        .point-icon {
+            flex-shrink: 0;
+            margin-right: 10px;
+            height: 24px;
+            width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .arrow-path {
+            position: absolute;
+            top: 50%;
+            width: 50px;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+        .arrow-right {
+            right: -25px;
+            color: #60a5fa;
+            font-size: 24px;
+        }
+        .metric-highlight {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #34d399, #10b981);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: block;
+            margin-top: 5px;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        .marketing-idea {
+            display: inline-block;
+            padding: 4px 12px;
+            margin: 3px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: rotate(0deg);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .marketing-idea:hover {
+            transform: scale(1.1);
+        }
+        .ideas-container {
+            position: relative;
+            height: 100px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .content-type {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .content-type:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        .content-icon {
+            background: rgba(96, 165, 250, 0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        .marketing-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            padding: 10px 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #34d399;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .idea-bulb {
+            position: absolute;
+            opacity: 0.8;
+            transition: all 0.5s ease;
+        }
+        .social-preview {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .social-preview:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        .social-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .social-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #60a5fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        .social-username {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .social-content {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        .social-footer {
+            display: flex;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .social-reaction {
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .social-reaction i {
+            margin-right: 4px;
+        }
+        .ai-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .creative-ideas-cloud {
+            position: relative;
+            margin-top: 5px;
+            height: 100px;
+            overflow: hidden;
+        }
+        .creative-tag {
+            position: absolute;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            opacity: 0;
+            z-index: 3;
+        }
+        .creative-tag:hover {
+            transform: scale(1.1);
+        }
+        .lightbulb-container {
+            position: relative;
+            height: 90px;
+            width: 90px;
+            margin: 0 auto 15px;
+        }
+        .lightbulb {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            transition: all 0.5s ease;
+        }
+        .lightbulb-off {
+            color: #6b7280;
+            opacity: 0.7;
+        }
+        .lightbulb-on {
+            color: #fbbf24;
+            opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.7));
+        }
+        .dify-interface {
+            border: 2px solid rgba(96, 165, 250, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 15px 0;
+            background: rgba(15, 32, 39, 0.5);
+        }
+        .dify-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 8px;
+        }
+        .dify-logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            background: #60a5fa;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dify-prompt {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .dify-response-container {
+            position: relative;
+        }
+        .dify-response {
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 13px;
+            border-left: 3px solid #60a5fa;
+        }
+        .typing-indicator {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .typing-dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: #60a5fa;
+            margin-right: 3px;
+            animation: typingAnimation 1s infinite;
+        }
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typingAnimation {
+            0% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-3px); }
+            100% { opacity: 0.3; transform: translateY(0); }
+        }
+        .content-format {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .content-format:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .format-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(52, 211, 153, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #34d399;
+            font-size: 14px;
+        }
+        .format-text {
+            flex-grow: 1;
+            font-size: 13px;
+        }
+        .before-empty-notes {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            position: relative;
+            height: 70px;
+        }
+        .empty-line {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+        .empty-line.short { width: 60%; }
+        .empty-line.medium { width: 80%; }
+        .cursor {
+            position: absolute;
+            width: 2px;
+            height: 14px;
+            background: #f87171;
+            top: 10px;
+            left: 12px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .idea-popup {
+            position: absolute;
+            background: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(52, 211, 153, 0.3);
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+</head>
+<body>
+    <div class="slide flex flex-col p-10 relative">
+        <div class="gradient-overlay"></div>
+        
+        <!-- Main content with z-index to appear above gradient -->
+        <div class="z-10 flex flex-col h-full">
+            <!-- Title section -->
+            <div class="mb-4 text-center">
+                <h1 class="title text-5xl mb-2">活用事例③<br/>アイデア創出からコンテンツ生成まで - <br> マーケティング活動を加速</h1>
+            </div>
+            
+            <div class="flex-1 flex items-center">
+                <div class="grid grid-cols-3 gap-7 w-full">
+                    <!-- Before Column -->
+                    <div class="relative">
+                        <div class="stage-card before-card">
+                            <div class="glow before-glow"></div>
+                            <div class="stage-badge before-badge">Before</div>
+                            <h3 class="text-2xl font-bold mb-4 mt-3 flex items-center">
+                                <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i>課題
+                            </h3>
+                            
+                            <!-- Empty lightbulb visualization -->
+                            <div class="lightbulb-container">
+                                <div class="lightbulb lightbulb-off">
+                                    <i class="far fa-lightbulb"></i>
+                                </div>
+                                <div class="lightbulb lightbulb-on">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="before-empty-notes">
+                                <div class="cursor"></div>
+                                <div class="empty-line short"></div>
+                                <div class="empty-line medium"></div>
+                                <div class="empty-line"></div>
+                            </div>
+                            
+                            <!-- Challenge description -->
+                            <div class="point-item">
+                                <div class="point-icon bg-red-500 bg-opacity-20">
+                                    <i class="fas fa-bullhorn text-red-400"></i>
+                                </div>
+                                <div>
+                                    <span class="text-red-300">キャッチコピーがなかなか浮かばない…</span>
+                                </div>
+                            </div>
+                            
+                            <div class="point-item">
+                                <div class="point-icon bg-red-500 bg-opacity-20">
+                                    <i class="fab fa-blogger text-red-400"></i>
+                                </div>
+                                <div>
+                                    ブログ記事やSNS投稿のネタ切れ
+                                </div>
+                            </div>
+                            
+                            <div class="point-item">
+                                <div class="point-icon bg-red-500 bg-opacity-20">
+                                    <i class="fas fa-clock text-red-400"></i>
+                                </div>
+                                <div>
+                                    コンテンツ作成に時間がかかりすぎる
+                                </div>
+                            </div>
+                        </div>
+                        <div class="arrow-path arrow-right">
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- With Dify Column -->
+                    <div class="relative">
+                        <div class="stage-card with-dify-card">
+                            <div class="glow with-dify-glow"></div>
+                            <div class="stage-badge with-dify-badge">With Dify</div>
+                            <h3 class="text-2xl font-bold mb-3 mt-3 flex items-center">
+                                <i class="fas fa-magic text-blue-400 mr-2"></i>Difyでこう変わる！
+                            </h3>
+                            
+                            <!-- Sample Dify interface -->
+                            <div class="dify-interface">
+                                <div class="dify-header">
+                                    <div class="dify-logo">
+                                        <i class="fas fa-robot text-xs text-white"></i>
+                                    </div>
+                                    <span class="text-sm font-bold">Dify Marketing Assistant</span>
+                                </div>
+                                <div class="dify-prompt">
+                                    <strong>プロンプト:</strong> 20代向けの新発売ウェアラブルデバイスのSNS広告文を5つ考えてください。キーワード：健康管理、スタイリッシュ、手頃な価格
+                                </div>
+                                <div class="dify-response-container">
+                                    <div class="dify-response">
+                                        <div id="typing-text">
+                                            <div class="typing-indicator">
+                                                <span class="typing-dot"></span>
+                                                <span class="typing-dot"></span>
+                                                <span class="typing-dot"></span>
+                                            </div>
+                                            <span id="response-text"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center my-2">
+                                <div class="text-sm font-bold text-blue-400">入力内容</div>
+                                <i class="fas fa-arrow-down text-blue-400"></i>
+                                <div class="text-sm font-bold text-blue-400">AIが自動生成</div>
+                            </div>
+                            
+                            <!-- Content types -->
+                            <div class="content-type">
+                                <div class="content-icon">
+                                    <i class="fas fa-bullhorn text-blue-400"></i>
+                                </div>
+                                <div class="text-sm">
+                                    <strong>キャッチコピー・広告文</strong>
+                                    <span class="text-xs block opacity-70">ターゲット・商品特性から多角的な提案</span>
+                                </div>
+                            </div>
+                            
+                            <div class="content-type">
+                                <div class="content-icon">
+                                    <i class="fab fa-instagram text-blue-400"></i>
+                                </div>
+                                <div class="text-sm">
+                                    <strong>SNS投稿文・ハッシュタグ</strong>
+                                    <span class="text-xs block opacity-70">プラットフォーム特性に合わせた最適化</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Idea bubbles that will pop up with JS -->
+                            <div id="idea-popup-container"></div>
+                        </div>
+                        <div class="arrow-path arrow-right">
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- After Column -->
+                    <div>
+                        <div class="stage-card after-card">
+                            <div class="glow after-glow"></div>
+                            <div class="stage-badge after-badge">After</div>
+                            <h3 class="text-2xl font-bold mb-3 mt-3 flex items-center">
+                                <i class="fas fa-chart-line text-green-400 mr-2"></i>期待される効果
+                            </h3>
+                            
+                            <!-- Creative idea cloud -->
+                            <div class="creative-ideas-cloud" id="creative-cloud">
+                                <!-- Tags will be added by JS -->
+                            </div>
+                            
+                            <!-- Example of AI-generated social post -->
+                            <div class="social-preview" style="margin-top: -5rem;">
+                                <div class="social-header">
+                                    <div class="social-avatar">
+                                        <i class="fas fa-user text-xs text-white"></i>
+                                    </div>
+                                    <span class="social-username">御社公式アカウント</span>
+                                </div>
+                                <div class="social-content">
+                                    <strong>「健康を着る、スタイルを纏う。」</strong> たった¥19,800でプロ並みの健康管理を。新発売のSmartWearで毎日をスマートに。#健康テック #手頃価格 #20代ライフ
+                                </div>
+                                <div class="social-footer">
+                                    <div class="social-reaction">
+                                        <i class="fas fa-heart"></i> 238
+                                    </div>
+                                    <div class="social-reaction">
+                                        <i class="fas fa-retweet"></i> 76
+                                    </div>
+                                    <div class="social-reaction">
+                                        <i class="fas fa-comment"></i> 42
+                                    </div>
+                                </div>
+                                <div class="ai-badge">AI生成</div>
+                            </div>
+                            
+                            <!-- Stats -->
+                            <div class="marketing-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">3倍</div>
+                                    <div class="stat-label">コンテンツ作成速度</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">5倍</div>
+                                    <div class="stat-label">アイデア生成量</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">40%</div>
+                                    <div class="stat-label">工数削減</div>
+                                </div>
+                            </div>
+                            
+                            <div class="point-item">
+                                <div class="point-icon bg-green-500 bg-opacity-20">
+                                    <i class="fas fa-tachometer-alt text-green-400"></i>
+                                </div>
+                                <div>
+                                    <strong>情報発信の迅速化・多様化</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Background decorative elements -->
+        <div class="absolute bottom-5 right-5 opacity-10">
+            <i class="fas fa-ad text-6xl"></i>
+        </div>
+        <div class="absolute top-20 left-10 opacity-10">
+            <i class="fas fa-lightbulb text-6xl"></i>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate the lightbulb
+            setTimeout(() => {
+                document.querySelector('.lightbulb-off').style.opacity = '0';
+                document.querySelector('.lightbulb-on').style.opacity = '0.9';
+            }, 2000);
+            
+            // Typing effect for Dify response
+            const responses = [
+                "①「健康を着る、スタイルを纏う。」たった¥19,800でプロ並みの健康管理を。\n",
+                "②「24時間、あなたの健康を見守る。でもそれを誰も気づかない。」スタイリッシュなデザインで目立たない健康管理。\n",
+                "③「価格は手頃、機能はプレミアム」健康データを手元に、スタイルは損なわない。\n",
+                "④「心拍数だけじゃない、あなたのライフスタイルを変える一歩」新発売のウェアラブルデバイス。\n",
+                "⑤「忙しい毎日でも、健康は手首の上に」手頃な価格で始める20代からの健康投資。"
+            ];
+            
+            let displayText = '';
+            let responseIndex = 0;
+            let charIndex = 0;
+            const responseTextElement = document.getElementById('response-text');
+            const typingIndicator = document.querySelector('.typing

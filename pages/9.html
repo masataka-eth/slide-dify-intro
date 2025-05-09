@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>まとめ - Difyで実現するAI活用の未来</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .slide {
+        width: 1280px;
+        min-height: 720px;
+        position: relative;
+        overflow: hidden;
+      }
+      .gradient-overlay {
+        background: linear-gradient(
+          135deg,
+          rgba(76, 0, 255, 0.05),
+          rgba(0, 153, 255, 0.05)
+        );
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      .title {
+        font-weight: 800;
+        line-height: 1.1;
+        background: linear-gradient(90deg, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+        font-size: 56px;
+        margin-bottom: 15px;
+      }
+
+      /* 中央コンテナとロゴ */
+      .center-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        z-index: 10;
+        box-shadow: 0 0 30px rgba(96, 165, 250, 0.4);
+        pointer-events: none;
+      }
+
+      .center-logo img {
+        width: 70%;
+        height: auto;
+      }
+
+      /* 円形装飾 */
+      .circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        z-index: 2;
+        transform-origin: center center;
+      }
+
+      .circle-1 {
+        width: 250px;
+        height: 250px;
+        margin-left: -125px;
+        margin-top: -125px;
+        animation: rotate 40s linear infinite;
+      }
+
+      .circle-2 {
+        width: 350px;
+        height: 350px;
+        margin-left: -175px;
+        margin-top: -175px;
+        animation: rotate 60s linear infinite reverse;
+      }
+
+      /* キーワード円形レイアウト */
+      .orbit-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 450px;
+        height: 450px;
+        margin-left: -225px;
+        margin-top: -225px;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .keyword {
+        position: absolute;
+        width: 110px;
+        height: 110px;
+        margin-left: -55px;
+        margin-top: -55px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        pointer-events: auto;
+      }
+
+      .keyword:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+        z-index: 20;
+      }
+
+      .keyword-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+
+      .keyword-text {
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      /* 接続線 */
+      .connection {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.1)
+        );
+        top: 50%;
+        left: 50%;
+        transform-origin: left center;
+        z-index: 1;
+      }
+
+      /* 下部メッセージ */
+      .message-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        text-align: center;
+        border-radius: 30px 30px 0 0;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .message {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        line-height: 1.4;
+      }
+
+      .highlight {
+        color: #60a5fa;
+        font-weight: 800;
+        text-shadow: 0 0 15px rgba(96, 165, 250, 0.5);
+      }
+
+      /* 人物アイコン */
+      .employees {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        z-index: 2;
+        margin-top: 10px;
+      }
+
+      .employee {
+        width: 50px;
+        height: 50px;
+        background: #60a5fa;
+        border-radius: 50%;
+        margin: 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        animation: fadeUp 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      .employee:nth-child(2) {
+        animation-delay: 0.2s;
+        background: #c084fc;
+      }
+
+      .employee:nth-child(3) {
+        animation-delay: 0.4s;
+        background: #34d399;
+      }
+
+      .employee:nth-child(4) {
+        animation-delay: 0.6s;
+        background: #fbbf24;
+      }
+
+      .employee:nth-child(5) {
+        animation-delay: 0.8s;
+        background: #f87171;
+      }
+
+      .subtitle {
+        font-size: 22px;
+        opacity: 0.8;
+        max-width: 700px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      /* アニメーション */
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0.3;
+        }
+      }
+
+      .pulse {
+        animation: pulse 3s infinite;
+      }
+
+      /* パーティクル */
+      .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide relative">
+      <!-- 背景グラデーション -->
+      <div class="gradient-overlay"></div>
+
+      <!-- 装飾サークル -->
+      <!-- <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div> -->
+
+      <!-- メインコンテンツ -->
+      <div class="z-10 relative h-full flex flex-col p-8">
+        <!-- タイトル -->
+        <div class="text-center mb-10">
+          <h1 class="title">まとめ</h1>
+          <p class="subtitle">Difyと共に、AIによる業務革新の一歩先へ</p>
+        </div>
+
+        <!-- キーワード円形レイアウト -->
+        <div class="flex-1 relative" style="min-height: 450px">
+          <!-- 中央ロゴ -->
+          <div class="center-logo">
+            <img
+              src="https://assets.dify.ai/images/dify_logo_dark.png"
+              alt="Difyロゴ"
+            />
+          </div>
+
+          <!-- キーワード配置（JavaScriptで動的に生成） -->
+          <div class="orbit-container" id="orbit-container"></div>
+
+          <!-- 下部メッセージ -->
+          <!-- <div class="message-container"> -->
+
+          <!-- </div> -->
+        </div>
+      </div>
+      <p class="message text-center absolute bottom-0 left-0 right-0 mb-16">
+        あなたの会社の「<span class="highlight">こんなことできたら良いな</span
+        >」をDifyで実現しませんか？
+      </p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // キーワードデータ
+        const keywords = [
+          {
+            id: "efficiency",
+            angle: 0,
+            icon: "fas fa-tasks",
+            text: "業務効率化",
+            color: "#60a5fa",
+          },
+          {
+            id: "productivity",
+            angle: 60,
+            icon: "fas fa-chart-line",
+            text: "生産性向上",
+            color: "#8b5cf6",
+          },
+          {
+            id: "cost",
+            angle: 120,
+            icon: "fas fa-coins",
+            text: "コスト削減",
+            color: "#34d399",
+          },
+          {
+            id: "innovation",
+            angle: 180,
+            icon: "fas fa-lightbulb",
+            text: "価値創造",
+            color: "#fbbf24",
+          },
+          {
+            id: "dx",
+            angle: 240,
+            icon: "fas fa-rocket",
+            text: "DX加速",
+            color: "#f87171",
+          },
+          {
+            id: "workstyle",
+            angle: 300,
+            icon: "fas fa-users",
+            text: "働き方改革",
+            color: "#818cf8",
+          },
+        ];
+
+        const container = document.getElementById("orbit-container");
+        const radius = 225; // 円の半径
+
+        // キーワードと接続線を生成
+        keywords.forEach((keyword, index) => {
+          // 角度をラジアンに変換
+          const rad = (keyword.angle * Math.PI) / 180;
+
+          // 円周上の座標を計算
+          const x = radius * Math.cos(rad);
+          const y = radius * Math.sin(rad);
+
+          // キーワード要素を作成
+          const keywordEl = document.createElement("div");
+          keywordEl.className = "keyword";
+          keywordEl.id = keyword.id;
+          keywordEl.style.left = `calc(50% + ${x}px)`;
+          keywordEl.style.top = `calc(50% + ${y}px)`;
+          keywordEl.style.animationDelay = `${index * 0.2}s`;
+
+          // アイコン
+          const iconEl = document.createElement("div");
+          iconEl.className = "keyword-icon";
+          iconEl.style.color = keyword.color;
+          iconEl.innerHTML = `<i class="${keyword.icon}"></i>`;
+
+          // テキスト
+          const textEl = document.createElement("div");
+          textEl.className = "keyword-text";
+          textEl.textContent = keyword.text;
+
+          keywordEl.appendChild(iconEl);
+          keywordEl.appendChild(textEl);
+          container.appendChild(keywordEl);
+
+          // 接続線を作成
+          const connection = document.createElement("div");
+          connection.className = "connection pulse";
+          connection.style.width = `${radius - 55}px`; // キーワードの半径を考慮
+          connection.style.transform = `rotate(${keyword.angle}deg)`;
+          connection.style.animationDelay = `${index * 0.3}s`;
+          container.appendChild(connection);
+        });
+
+        // パーティクルを追加
+        for (let i = 0; i < 20; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+
+          // ランダムなサイズ (1-4px)
+          const size = Math.random() * 3 + 1;
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+
+          // ランダムな位置
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.opacity = Math.random() * 0.5 + 0.1;
+
+          // ランダムなアニメーション
+          const duration = Math.random() * 10 + 5;
+          const delay = Math.random() * 5;
+
+          // アニメーションを設定
+          particle.style.animation = `float ${duration}s ease-in-out infinite`;
+          particle.style.animationDelay = `${delay}s`;
+
+          document.querySelector(".slide").appendChild(particle);
+        }
+      });
+
+      // フロートアニメーションを定義
+      document.styleSheets[0].insertRule(
+        `@keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(${Math.random() * 20 - 10}px, ${
+          Math.random() * 20 - 10
+        }px); }
+            100% { transform: translate(0, 0); }
+        }`,
+        document.styleSheets[0].cssRules.length
+      );
+    </script>
+  </body>
+</html>

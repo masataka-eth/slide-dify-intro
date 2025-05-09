@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>活用事例② - ドキュメント作成・要約の高速化</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+      .slide {
+        width: 1280px;
+        min-height: 720px;
+        position: relative;
+        overflow: hidden;
+        /* transform: scale(0.83);
+        transform-origin: center center; */
+      }
+      .gradient-overlay {
+        background: linear-gradient(
+          135deg,
+          rgba(76, 0, 255, 0.05),
+          rgba(0, 153, 255, 0.05)
+        );
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      .title {
+        font-weight: 800;
+        line-height: 1.1;
+        background: linear-gradient(90deg, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+      }
+      .stage-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 30px 20px 20px;
+        backdrop-filter: blur(5px);
+        min-height: 550px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .stage-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .before-card {
+        border-left: 4px solid #f87171;
+      }
+      .with-dify-card {
+        border-left: 4px solid #60a5fa;
+      }
+      .after-card {
+        border-left: 4px solid #34d399;
+      }
+      .stage-badge {
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+      }
+      .before-badge {
+        background: #f87171;
+        color: white;
+      }
+      .with-dify-badge {
+        background: #60a5fa;
+        color: white;
+      }
+      .after-badge {
+        background: #34d399;
+        color: white;
+      }
+      .glow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .stage-card:hover .glow {
+        opacity: 0.5;
+      }
+      .before-glow {
+        box-shadow: 0 0 80px 20px rgba(248, 113, 113, 0.3) inset;
+      }
+      .with-dify-glow {
+        box-shadow: 0 0 80px 20px rgba(96, 165, 250, 0.3) inset;
+      }
+      .after-glow {
+        box-shadow: 0 0 80px 20px rgba(52, 211, 153, 0.3) inset;
+      }
+      .image-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+        margin-bottom: 15px;
+        max-height: 160px;
+      }
+      .point-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        padding-left: 10px;
+        position: relative;
+        z-index: 2;
+        font-size: 20px;
+      }
+      .point-icon {
+        flex-shrink: 0;
+        margin-right: 10px;
+        height: 24px;
+        width: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+      .arrow-path {
+        position: absolute;
+        top: 50%;
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        z-index: 10;
+      }
+      .arrow-right {
+        right: -25px;
+        color: #60a5fa;
+        font-size: 24px;
+      }
+      .document-stack {
+        position: relative;
+        width: 100%;
+        height: 120px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+      }
+      .document {
+        position: absolute;
+        width: 70px;
+        height: 90px;
+        background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        border-radius: 5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        font-size: 24px;
+        transition: all 0.3s ease;
+      }
+      .document-messy {
+        transform: rotate(-10deg);
+        top: 10px;
+        left: 20px;
+        z-index: 1;
+      }
+      .document-messy:nth-child(2) {
+        transform: rotate(5deg);
+        top: 5px;
+        left: 40px;
+        z-index: 2;
+      }
+      .document-messy:nth-child(3) {
+        transform: rotate(-5deg);
+        top: 15px;
+        left: 60px;
+        z-index: 3;
+      }
+      .document-messy:nth-child(4) {
+        transform: rotate(8deg);
+        top: 0;
+        left: 80px;
+        z-index: 4;
+      }
+      .document-messy:nth-child(5) {
+        transform: rotate(-15deg);
+        top: 20px;
+        left: 100px;
+        z-index: 5;
+      }
+      .document-messy:nth-child(6) {
+        transform: rotate(12deg);
+        top: 10px;
+        left: 120px;
+        z-index: 6;
+      }
+      .document-icon {
+        height: 70%;
+        width: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .metric-highlight {
+        font-size: 32px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #34d399, #10b981);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: block;
+        margin-top: 5px;
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+      }
+      .process-flow {
+        position: relative;
+        margin: 5px 0 10px;
+      }
+      .flow-step {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        font-size: 20px;
+      }
+      .flow-step:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(5px);
+      }
+      .flow-icon {
+        background: rgba(96, 165, 250, 0.2);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+      }
+      .time-saved-container {
+        position: relative;
+        height: 160px;
+        margin-bottom: 10px;
+      }
+      .time-comparison {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        height: 150px;
+        margin: 25px 0 40px;
+        padding: 0 20px;
+      }
+      .time-bar {
+        width: 80px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px 6px 0 0;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.5s ease;
+      }
+      .time-bar-before {
+        height: 100%;
+        background: linear-gradient(
+          to top,
+          rgba(248, 113, 113, 0.8),
+          rgba(248, 113, 113, 0.3)
+        );
+      }
+      .time-bar-after {
+        height: 40%;
+        background: linear-gradient(
+          to top,
+          rgba(52, 211, 153, 0.8),
+          rgba(52, 211, 153, 0.3)
+        );
+        margin-left: 40px;
+      }
+      .time-label {
+        position: absolute;
+        top: -25px;
+        font-weight: bold;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+      }
+      .time-value {
+        position: absolute;
+        bottom: -30px;
+        font-size: 18px;
+        font-weight: bold;
+        width: 100%;
+        text-align: center;
+      }
+      .saving-arrow {
+        position: absolute;
+        bottom: -55px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #34d399;
+      }
+      .document-organized {
+        width: 80px;
+        height: 100px;
+        background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+        border-radius: 5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        overflow: hidden;
+      }
+      .document-lines {
+        position: absolute;
+        top: 30%;
+        left: 15%;
+        right: 15%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .document-line {
+        height: 3px;
+        background: #aaa;
+        border-radius: 5px;
+      }
+      .document-line.short {
+        width: 60%;
+      }
+      .document-ai-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: #60a5fa;
+        font-size: 18px;
+      }
+      .hourglass-container {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 15px;
+        position: relative;
+      }
+      .hourglass {
+        font-size: 40px;
+        color: #f87171;
+        position: absolute;
+        top: 0;
+        left: 10px;
+      }
+      .hourglass-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide flex flex-col p-10 relative">
+      <div class="gradient-overlay"></div>
+
+      <!-- Main content with z-index to appear above gradient -->
+      <div class="z-10 flex flex-col h-full">
+        <!-- Title section -->
+        <div class="mb-8 text-center">
+          <h1 class="title text-5xl mb-2">
+            活用事例② <br /><br />
+            議事録・報告書作成などドキュメント業務の高速化
+          </h1>
+        </div>
+
+        <div class="flex-1 flex items-center">
+          <div class="grid grid-cols-3 gap-7 w-full">
+            <!-- Before Column -->
+            <div class="relative">
+              <div class="stage-card before-card">
+                <div class="glow before-glow"></div>
+                <div class="stage-badge before-badge">Before</div>
+                <h3 class="text-2xl font-bold mb-4 mt-3 flex items-center">
+                  <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i
+                  >課題
+                </h3>
+
+                <!-- Time consuming indicator -->
+                <div class="hourglass-container">
+                  <i class="fas fa-hourglass-start hourglass"></i>
+                  <div class="hourglass-overlay">3h+</div>
+                </div>
+
+                <!-- Messy documents visualization -->
+                <div class="document-stack">
+                  <div class="document document-messy">
+                    <div class="document-icon">
+                      <i class="fas fa-file-alt text-gray-500"></i>
+                    </div>
+                  </div>
+                  <div class="document document-messy">
+                    <div class="document-icon">
+                      <i class="fas fa-file-alt text-gray-500"></i>
+                    </div>
+                  </div>
+                  <div class="document document-messy">
+                    <div class="document-icon">
+                      <i class="fas fa-file-alt text-gray-500"></i>
+                    </div>
+                  </div>
+                  <div class="document document-messy">
+                    <div class="document-icon">
+                      <i class="fas fa-file-alt text-gray-500"></i>
+                    </div>
+                  </div>
+                  <div class="document document-messy">
+                    <div class="document-icon">
+                      <i class="fas fa-file-alt text-gray-500"></i>
+                    </div>
+                  </div>
+                  <div class="document document-messy">
+                    <div class="document-icon">
+                      <i class="fas fa-file-alt text-gray-500"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-clock text-red-400"></i>
+                  </div>
+                  <div>
+                    <span class="text-red-300"
+                      >会議後の議事録作成に毎度数時間...</span
+                    >
+                  </div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-file-alt text-red-400"></i>
+                  </div>
+                  <div>長文の報告書、読むのも書くのも一苦労</div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-user-clock text-red-400"></i>
+                  </div>
+                  <div>本来の業務に集中できない</div>
+                </div>
+              </div>
+              <div class="arrow-path arrow-right">
+                <i class="fas fa-long-arrow-alt-right"></i>
+              </div>
+            </div>
+
+            <!-- With Dify Column -->
+            <div class="relative">
+              <div class="stage-card with-dify-card">
+                <div class="glow with-dify-glow"></div>
+                <div class="stage-badge with-dify-badge">With Dify</div>
+                <h3 class="text-2xl font-bold mb-4 mt-3 flex items-center">
+                  <i class="fas fa-magic text-blue-400 mr-2"></i
+                  >Difyでこう変わる！
+                </h3>
+
+                <div class="image-container">
+                  <img
+                    src="https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2023/11/22/ML-15482_text_summarization_techniques-1024x454.png"
+                    alt="AIドキュメント要約"
+                    class="w-full object-cover"
+                    style="max-height: 160px"
+                  />
+                </div>
+
+                <div class="process-flow">
+                  <div class="flow-step">
+                    <div class="flow-icon">
+                      <i class="fas fa-microphone text-blue-400"></i>
+                    </div>
+                    <div>会議の音声データ / 長文テキスト入力</div>
+                  </div>
+
+                  <div class="flow-step">
+                    <div class="flow-icon">
+                      <i class="fas fa-robot text-blue-400"></i>
+                    </div>
+                    <div><strong>AIが自動で要約・構造化</strong></div>
+                  </div>
+
+                  <div class="flow-step">
+                    <div class="flow-icon">
+                      <i class="fas fa-file-alt text-blue-400"></i>
+                    </div>
+                    <div>議事録・報告書の即時生成</div>
+                  </div>
+                </div>
+              </div>
+              <div class="arrow-path arrow-right">
+                <i class="fas fa-long-arrow-alt-right"></i>
+              </div>
+            </div>
+
+            <!-- After Column -->
+            <div>
+              <div class="stage-card after-card">
+                <div class="glow after-glow"></div>
+                <div class="stage-badge after-badge">After</div>
+                <h3 class="text-2xl font-bold mb-3 mt-3 flex items-center">
+                  <i class="fas fa-chart-line text-green-400 mr-2"></i
+                  >期待される効果
+                </h3>
+
+                <!-- Time comparison visualization -->
+                <div class="time-comparison">
+                  <div class="time-bar time-bar-before">
+                    <div class="time-label">Before</div>
+                    <div class="time-value">25h/月</div>
+                  </div>
+
+                  <div class="time-bar time-bar-after">
+                    <div class="time-label">After</div>
+                    <div class="time-value">10h/月</div>
+                  </div>
+                </div>
+
+                <div class="saving-arrow">
+                  <i class="fas fa-arrow-down mr-2"></i>
+                  <span class="font-bold">60% 削減</span>
+                </div>
+
+                <div class="point-item mt-4">
+                  <div class="point-icon bg-green-500 bg-opacity-20">
+                    <i class="fas fa-tachometer-alt text-green-400"></i>
+                  </div>
+                  <div>
+                    <strong>ドキュメント作成時間</strong>
+                    <span class="metric-highlight">平均15時間/月 削減</span>
+                  </div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-green-500 bg-opacity-20">
+                    <i class="fas fa-lightbulb text-green-400"></i>
+                  </div>
+                  <div>創造的・戦略的な業務へシフト</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background decorative elements -->
+      <div class="absolute bottom-5 right-5 opacity-10">
+        <i class="fas fa-file-alt text-6xl"></i>
+      </div>
+      <div class="absolute top-20 left-10 opacity-10">
+        <i class="fas fa-pen-fancy text-6xl"></i>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add animation to document stack
+        const documents = document.querySelectorAll(".document-messy");
+        documents.forEach((doc, index) => {
+          setTimeout(() => {
+            doc.style.transform = `rotate(${
+              Math.floor(Math.random() * 25) - 10
+            }deg)`;
+          }, 2000 + index * 500);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>活用事例① - 社内ナレッジ検索と問い合わせ対応の劇的効率化</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .slide {
+        width: 1280px;
+        min-height: 720px;
+        position: relative;
+        overflow: hidden;
+      }
+      .gradient-overlay {
+        background: linear-gradient(
+          135deg,
+          rgba(76, 0, 255, 0.05),
+          rgba(0, 153, 255, 0.05)
+        );
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      .title {
+        font-weight: 800;
+        line-height: 1.1;
+        background: linear-gradient(90deg, #60a5fa, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+      }
+      .stage-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+        height: 100%;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      .stage-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .before-card {
+        border-left: 4px solid #f87171;
+      }
+      .with-dify-card {
+        border-left: 4px solid #60a5fa;
+      }
+      .after-card {
+        border-left: 4px solid #34d399;
+      }
+      .stage-badge {
+        position: absolute;
+        top: -15px;
+        left: 20px;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .before-badge {
+        background: #f87171;
+        color: white;
+      }
+      .with-dify-badge {
+        background: #60a5fa;
+        color: white;
+      }
+      .after-badge {
+        background: #34d399;
+        color: white;
+      }
+      .image-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      .point-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        padding-left: 10px;
+        font-size: 17px;
+      }
+      .point-icon {
+        flex-shrink: 0;
+        margin-right: 10px;
+        height: 24px;
+        width: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+      .arrow-path {
+        position: absolute;
+        top: 50%;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        z-index: 10;
+      }
+      .arrow-right {
+        right: -25px;
+        color: #60a5fa;
+        font-size: 24px;
+      }
+      .metric-highlight {
+        font-size: 28px;
+        font-weight: bold;
+        color: #34d399;
+        display: block;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide flex flex-col p-10 relative">
+      <div class="gradient-overlay"></div>
+
+      <!-- Main content with z-index to appear above gradient -->
+      <div class="z-10 flex flex-col h-full">
+        <!-- Title section -->
+        <div class="mb-8 text-center">
+          <h1 class="title text-5xl mb-2">
+            活用事例① <br /><br />
+            社内ナレッジ検索と問い合わせ対応の劇的効率化
+          </h1>
+        </div>
+
+        <div class="flex-1 flex items-center">
+          <div class="grid grid-cols-3 gap-6 w-full">
+            <!-- Before Column -->
+            <div class="relative">
+              <div class="stage-card before-card">
+                <div class="stage-badge before-badge">Before</div>
+                <h3 class="text-2xl font-bold mb-4 mt-3">課題</h3>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-search text-red-400"></i>
+                  </div>
+                  <div>
+                    <span class="text-red-300">"あの資料どこだっけ？"</span>
+                  </div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-question-circle text-red-400"></i>
+                  </div>
+                  <div>
+                    <span class="text-red-300"
+                      >"この件、誰に聞けばいいの？"</span
+                    >
+                  </div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-clock text-red-400"></i>
+                  </div>
+                  <div>情報検索に時間がかかり、業務停滞</div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-user-clock text-red-400"></i>
+                  </div>
+                  <div>ヘルプデスクへの問い合わせ集中</div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-red-500 bg-opacity-20">
+                    <i class="fas fa-weight-hanging text-red-400"></i>
+                  </div>
+                  <div>担当者の負担増</div>
+                </div>
+              </div>
+              <div class="arrow-path arrow-right">
+                <i class="fas fa-long-arrow-alt-right"></i>
+              </div>
+            </div>
+
+            <!-- With Dify Column -->
+            <div class="relative">
+              <div class="stage-card with-dify-card">
+                <div class="stage-badge with-dify-badge">With Dify</div>
+                <h3 class="text-2xl font-bold mb-4 mt-3">Difyでこう変わる！</h3>
+
+                <div class="image-container mb-4">
+                  <img
+                    src="https://blog.advantageclub.co/wp-content/uploads/2025/02/HR-Chatbots-for-Employee-Engagement.webp"
+                    alt="AIチャットボット"
+                    class="w-full"
+                  />
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-blue-500 bg-opacity-20">
+                    <i class="fas fa-database text-blue-400"></i>
+                  </div>
+                  <div>社内規定、マニュアル、過去のQ&AなどをDifyに学習</div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-blue-500 bg-opacity-20">
+                    <i class="fas fa-robot text-blue-400"></i>
+                  </div>
+                  <div>
+                    <strong>社員専用のAIチャットボットを数日で構築！</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="arrow-path arrow-right">
+                <i class="fas fa-long-arrow-alt-right"></i>
+              </div>
+            </div>
+
+            <!-- After Column -->
+            <div>
+              <div class="stage-card after-card">
+                <div class="stage-badge after-badge">After</div>
+                <h3 class="text-2xl font-bold mb-4 mt-3">期待される効果</h3>
+
+                <div class="point-item">
+                  <div class="point-icon bg-green-500 bg-opacity-20">
+                    <i class="fas fa-chart-line text-green-400"></i>
+                  </div>
+                  <div>
+                    問い合わせ対応工数
+                    <span class="metric-highlight">80% 削減</span>
+                  </div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-green-500 bg-opacity-20">
+                    <i class="fas fa-user-graduate text-green-400"></i>
+                  </div>
+                  <div>従業員の自己解決力向上</div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-green-500 bg-opacity-20">
+                    <i class="fas fa-bolt text-green-400"></i>
+                  </div>
+                  <div>情報アクセスの迅速化</div>
+                </div>
+
+                <div class="point-item">
+                  <div class="point-icon bg-green-500 bg-opacity-20">
+                    <i class="fas fa-share-alt text-green-400"></i>
+                  </div>
+                  <div>ナレッジの共有と活用促進</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background decorative elements -->
+      <div class="absolute bottom-5 right-5 opacity-10">
+        <i class="fas fa-comments text-6xl"></i>
+      </div>
+      <div class="absolute top-20 left-10 opacity-10">
+        <i class="fas fa-brain text-6xl"></i>
+      </div>
+    </div>
+  </body>
+</html>
